@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  
+  web:
+    container_name: api-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - MONGO_CONNECTION_STRING=mongodb://db/users
+      - JWT_ACCESS_SECRET=jwt-access-key
+      - JWT_REFRESH_SECRET=jwt-refresh-hey
+    volumes:
+      - .:/app
+    command: npm run dev
+    restart: always
+    networks:
+      - main
+    depends_on:
+      - db      
+  
+  db:
+    container_name: db
+    image: mongo
+    ports:
+      - 27017:27017
+    networks:
+      - main
+    volumes:
+      - ./db-data:/data/db
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+        ME_CONFIG_MONGODB_SERVER: db  
+    networks:
+      - main
+
+volumes:
+  db-data:      
+networks:
+  main:
