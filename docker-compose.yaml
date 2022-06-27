@@ -30,7 +30,7 @@ services:
     networks:
       - main
     volumes:
-      - ./db-data:/data/db
+      - ./docker/db-data:/data/db
 
   mongo-express:
     container_name: mongo-express
