@@ -6,7 +6,6 @@ import { controller } from '../controllers/userController'
 const usersRouter = Router()
 
 usersRouter.post('/registration', [
-  body('username', 'Пароль должен быть длиннее 4 и короче 10 символов').isLength({ min: 4, max: 10 }),
   body('password', 'Пароль должен быть длиннее 4 и короче 10 символов').isLength({ min: 4, max: 10 }),
   body('email', 'Email заполнен не коррктно').isEmail()
 ], controller.registration)

@@ -13,6 +13,7 @@ services:
       - MONGO_CONNECTION_STRING=mongodb://db/users
       - JWT_ACCESS_SECRET=jwt-access-key
       - JWT_REFRESH_SECRET=jwt-refresh-hey
+      - CLIENT_URL=http://localhost:4000
     volumes:
       - .:/app
     command: npm run dev
