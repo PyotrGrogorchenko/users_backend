@@ -18,7 +18,7 @@ export const userService = {
     const newUser = await UserModel.create({ ...user, password: hashPassword })
     const userDto = new UserDto(newUser)
     const tokens = tokenService.generate({ ...userDto })
-    await tokenService.save(newUser._id, tokens.refreshToken)
+    await tokenService.save(newUser.id, tokens.refreshToken)
      
     return { ...tokens, user: userDto }
   },
@@ -37,7 +37,7 @@ export const userService = {
 
     const userDto = new UserDto(foundUser)
     const tokens = tokenService.generate({ ...userDto })
-    await tokenService.save(foundUser._id, tokens.refreshToken)
+    await tokenService.save(foundUser.id, tokens.refreshToken)
      
     return { ...tokens, user: userDto }
   }, 
@@ -66,7 +66,8 @@ export const userService = {
     return { ...tokens, user: userDto }
   },
   find: async () => {
-    const users = await UserModel.find({}, { username: true })
+    const users = await UserModel.find({}, { password: false })
+    console.log(users)
     return users
   } 
 }

@@ -4,11 +4,11 @@ import { tokenService } from '../services/tokenService'
 
 export const authMiddleware = (req: Record<string, any>, res: Response, next: (e?: Error) => void) => {
   try {
-    const { authorization } = req.headers
-    if (!authorization) {
+    const { autorization } = req.headers
+    if (!autorization) {
       return next(ApiError.UnautorizedError())
     }
-    const token = authorization.split(' ')[1]
+    const token = autorization.split(' ')[1]
     if (!token) {
       return next(ApiError.UnautorizedError())
     }

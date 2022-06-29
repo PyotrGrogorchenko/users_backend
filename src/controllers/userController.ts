@@ -38,7 +38,7 @@ export const controller =  {
       await userService.logout(refreshToken)
       res.clearCookie('refreshToken')
       console.log('logout')
-      return res.status(200)
+      return res.status(200).json({ message: 'ok' })
     } catch (e: any) {
       next(e)
     }
