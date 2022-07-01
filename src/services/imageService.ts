@@ -34,6 +34,6 @@ export const imageService = {
       return { image: image.image }
     }
     
-    throw new ApiError(400, 'Изображение не надено')
+    throw new ApiError(400, 'Изображение не найдено')
   } 
 }

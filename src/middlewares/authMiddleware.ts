@@ -12,7 +12,9 @@ export const authMiddleware = (req: Record<string, any>, res: Response, next: (e
     if (!token) {
       return next(ApiError.UnautorizedError())
     }
+    console.log('autorization', autorization)
     const userData = tokenService.validate(token, 'ACCESS')
+    
     if (!userData) {
       return next(ApiError.UnautorizedError())
     }

@@ -1,12 +1,12 @@
 import bcrypt from 'bcrypt'
-import { User } from '../types'
+// import { User } from '../types'
 import { UserModel } from '../models/UserModel'
 import { tokenService } from './tokenService'
 import { UserDto } from '../dtos/userDto'
 import { ApiError } from '../exceptions/ApiError'
 
 export const userService = {
-  registration: async (user: User) => {
+  registration: async (user: UserDto & { password: string }) => {
     const { email, password } = user
     
     const candidate = await UserModel.findOne({ email })
@@ -18,11 +18,11 @@ export const userService = {
     const newUser = await UserModel.create({ ...user, password: hashPassword })
     const userDto = new UserDto(newUser)
     const tokens = tokenService.generate({ ...userDto })
-    await tokenService.save(newUser.id, tokens.refreshToken)
+    await tokenService.save(newUser._id, tokens.refreshToken)
      
     return { ...tokens, user: userDto }
   },
-  login: async (user: User) => {
+  login: async (user: UserDto & { password: string }) => {
     const { email, password } = user
     
     const foundUser = await UserModel.findOne({ email })
@@ -36,8 +36,8 @@ export const userService = {
     }
 
     const userDto = new UserDto(foundUser)
-    const tokens = tokenService.generate({ ...userDto })
-    await tokenService.save(foundUser.id, tokens.refreshToken)
+    const tokens = tokenService.generate({ ...userDto.getKey() })
+    await tokenService.save(foundUser._id, tokens.refreshToken)
      
     return { ...tokens, user: userDto }
   }, 
@@ -57,11 +57,11 @@ export const userService = {
       throw ApiError.UnautorizedError()
     }
 
-    const foundUser = await UserModel.findById(String(userData.id))
+    const foundUser = await UserModel.findById(String(userData._id))
 
     const userDto = new UserDto(foundUser)
-    const tokens = tokenService.generate({ ...userDto })
-    await tokenService.save(userData.id, tokens.refreshToken)
+    const tokens = tokenService.generate({ ...userDto.getKey() })
+    await tokenService.save(userData._id, tokens.refreshToken)
      
     return { ...tokens, user: userDto }
   },

@@ -14,4 +14,9 @@ export class UserDto {
     this.gender = model.gender
     this.avatar = model.avatar
   }
+
+  getKey() {
+    return { _id: this._id }
+  }
+
 }
