@@ -1,34 +1,33 @@
-import { readFileSync, unlinkSync } from 'fs'
-import path from 'path'
-import { Request } from 'express'
 import { ImageModel } from '../models/ImageModel'
 import { ApiError } from '../exceptions/ApiError'
+import { UserModel } from '../models/UserModel'
 
 export const imageService = {
-  upload: async (req: Request) => {
-    const imagePath = path.join(String(process.env.TEMP_DIR_PATH) + '/' + req.file?.originalname)
+  upload: async (userId: string, file?: Express.Multer.File, type = 'avatar') => {
+    
+    const foundUser = await UserModel.findById(userId)
+
+    if (!foundUser) throw new ApiError(400, 'Не удалось сохранить изображение')
+
     const imageObj = {
-      user: req.body.userId,
-      type: req.body.type || 'avatar',
+      type,
       image: {
-        data: readFileSync(imagePath),
-        contentType: req.file?.mimetype
+        data: file?.buffer,
+        contentType: file?.mimetype
       }
     }
 
-    unlinkSync(imagePath)
-
-    const image = await ImageModel.findOne({ user: req.body.userId, type: imageObj.type })
-    if (image) {
-      image.updateOne(imageObj)  
-      return { status: 202, image: image.image }
+    if (foundUser.avatar) {
+      const image = await ImageModel.findByIdAndUpdate(foundUser.avatar, imageObj)
+      return { status: 200, ok: true, image: { ...image } }
     }
-    
-    const newImage = await ImageModel.create(imageObj)
 
-    return { status: 201, image: newImage.image }
+    const newImage = await ImageModel.create(imageObj)
+    await UserModel.findByIdAndUpdate(userId, { avatar: newImage._id })
+
+    return { status: 201, ok: true, image: { ...newImage } }
   }, 
-  download: async (userId: string, type: string) => {
+  download: async (userId: string, type: string = 'avatar') => {
     const image = await ImageModel.findOne({ userId, type })
     if (image) {
       return { image: image.image }

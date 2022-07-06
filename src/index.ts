@@ -6,6 +6,8 @@ import path from 'path'
 import { mkdirSync, existsSync } from 'fs'
 import { usersRouter } from './routers/user'
 import { imagesRouter } from './routers/image'
+import { authRouter } from './routers/auth'
+import { testRouter } from './routers/test'
 import { errorMiddleware } from './middlewares/errorMiddleware'
 
 export const app = express()
@@ -18,8 +20,11 @@ app.use(cors({
 }))
 app.get('/', (_, res) => {res.send('<h1>Welcome!</h1>')})
 
+app.use('/api/auth', authRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/images', imagesRouter)
+
+app.use('/test', testRouter)
 
 app.use(errorMiddleware)
 

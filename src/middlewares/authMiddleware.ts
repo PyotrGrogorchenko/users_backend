@@ -4,15 +4,14 @@ import { tokenService } from '../services/tokenService'
 
 export const authMiddleware = (req: Record<string, any>, res: Response, next: (e?: Error) => void) => {
   try {
-    const { autorization } = req.headers
-    if (!autorization) {
+    const { authorization } = req.headers
+    if (!authorization) {
       return next(ApiError.UnautorizedError())
     }
-    const token = autorization.split(' ')[1]
+    const token = authorization.split(' ')[1]
     if (!token) {
       return next(ApiError.UnautorizedError())
     }
-    console.log('autorization', autorization)
     const userData = tokenService.validate(token, 'ACCESS')
     
     if (!userData) {

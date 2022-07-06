@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose'
   
-const ImageSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+export const ImageSchema = new Schema({
   type: { type: String, require: true },
   image: {
     data: Buffer,

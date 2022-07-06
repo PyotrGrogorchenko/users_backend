@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   dateBirth: { type: Date, required: false },
   gender: { type: String, enum : ['male', 'female'], required: false },
-  avatar: { type: String, required: false }
+  avatar:  { type: Schema.Types.ObjectId, ref: 'Image' }  
 })
 
 // UserSchema.virtual('id').get(function () {return this._id})
