@@ -1,4 +1,4 @@
-import { UserDto } from '../dtos/userDto'
+import { UserDto } from '../dtos/UserDto'
 import { UserModel } from '../models/UserModel'
 
 export const userService = {

@@ -1,3 +1,4 @@
+import { ApiError } from '../exceptions/ApiError'
 import { Request, Response } from 'express'
 import { imageService } from '../services/imageService'
 
@@ -6,19 +7,20 @@ export const controller =  {
     try {
       const userId = (req.user as Record<string, string>)._id
       const imageData = await imageService.upload(userId, req.file, req.body.type)
-      return res.status(imageData.status).json(imageData.image)
+      return res.status(imageData.status).json({ ok: true, ...imageData.data })
     } catch (e: any) {
       next(e)
     }
   },
-  download: async (req: Request & { user?: Record<string, string> }, res: Response, next: (e: Error) => void) => {
+  download: async (req: Request, res: Response, next: (e: Error) => void) => {
     try {
-      console.log('download', req.user)
-      const userId = (req.user as Record<string, string>)._id
-      // const { userId, type = 'avatar' } = req.query
-      const image = await imageService.download(userId, String(type))
-      // return res.status(200).json(image)
-      return res.status(200).json({ ok: true })
+      const { imageId } = req.query 
+      if (!imageId) {
+        throw new ApiError(400, 'Не указан параметр запроса imageId')  
+      }     
+      
+      const imageData = await imageService.download(imageId as string)
+      return res.status(200).json({ ok: true, ...imageData.data })
     } catch (e: any) {
       next(e)
     }

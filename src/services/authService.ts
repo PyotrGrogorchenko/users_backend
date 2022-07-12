@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 // import { User } from '../types'
 import { UserModel } from '../models/UserModel'
 import { tokenService } from './tokenService'
-import { UserDto } from '../dtos/userDto'
+import { UserDto } from '../dtos/UserDto'
 import { ApiError } from '../exceptions/ApiError'
 import { userService } from './userService'
 
@@ -22,7 +22,7 @@ export const authService = {
     const tokens = tokenService.generate({ ...userDto })
     await tokenService.save(newUser._id, tokens.refreshToken)
      
-    return { ...tokens, user: newUser }
+    return { ...tokens, user: userDto }
   },
   login: async (user: UserDto & { password: string }) => {
     const { email, password } = user

@@ -4,7 +4,7 @@ export class UserDto {
   username = ''
   dateBirth = null
   gender = null
-  avatar = null
+  avatarId = null
 
   constructor(model: any) {
     this._id = model._id
@@ -12,7 +12,7 @@ export class UserDto {
     this.username = model.username
     this.dateBirth = model.dateBirth
     this.gender = model.gender
-    this.avatar = model.avatar
+    this.avatarId = model.avatar
   }
 
   getKey() {

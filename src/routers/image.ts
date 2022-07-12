@@ -5,6 +5,6 @@ import { authMiddleware } from '../middlewares/authMiddleware'
 
 const imagesRouter = Router()
 imagesRouter.post('', authMiddleware, uploadMiddleware.single('image'), controller.upload)
-imagesRouter.get('', authMiddleware, controller.download)
+imagesRouter.get('', controller.download)
   
 export { imagesRouter }
